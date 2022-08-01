@@ -1,199 +1,233 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <title>Wisata</title>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-        aria-expanded="false" aria-label="Toggle navigation"></button>
-    <div class="collapse navbar-collapse" id="collapsibleNavId">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active">
-          {{-- <a class="nav-link" href="#">Pesanan <span class="sr-only">(current)</span></a> --}}
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('wisata.index') }}">Wisata</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('daftarharga.index') }}">DaftarHarga</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('reservasi.create') }}">Reservasi</a>
-          </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-    </div>
-  </nav>
+@extends('layouts.app')
+@section('title', 'Pemesanan Reservasi')
+@section('content')
 
-<div class="container" style="margin-top:80px">
-<div class="d-flex justify-content-center">
-<div class="card mt-5 border-5 shadow col-sm-8">
-{{-- <div class="card-header"> --}}
-<div class="card-title ms-5 mt-3">
-    <h4>Form Pemesanan </h4> </div>
-    <div class="card-body">
-<form action="{{ route('reservasi.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <div class="form-group">
-        <div class="row mb-3 ms-4">
-            <label for="nama" class="col-sm-4 col-form-label">Nama</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama">
-                 <!-- error message untuk title -->
-                @error('nama')
-                <div class="alert alert-danger mt-2">
-                    {{ $message }}
+    <div class="container" style="margin-top:80px">
+        <div class="d-flex justify-content-center">
+            <div class="card mt-5 border border-dark shadow col-sm-8 mb-5">
+                {{-- <div class="card-header"> --}}
+                <div class="card-title  mt-5">
+                    <h4>Form Pemesanan </h4>
                 </div>
-        @enderror
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-            <div class="row mb-3 ms-4">
-                <label for="nik" class="col-sm-4 col-form-label">NIK</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control @error('nik') is-invalid @enderror" name="nik">
-                     <!-- error message untuk title -->
-                    @error('nik')
-                    <div class="alert alert-danger mt-2">
-                        {{ $message }}
-                    </div>
-            @enderror
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-                <div class="row mb-3 ms-4">
-                    <label for="nohp" class="col-sm-4 col-form-label">Nohp</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control @error('nohp') is-invalid @enderror" name="nohp">
-                         <!-- error message untuk title -->
-                        @error('nohp')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                @enderror
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="row mb-3 ms-4">
-                        <label for="wisata" class="col-sm-4 col-form-label">wisata</label>
-                        <div class="col-sm-6">
-                            <select class="form-select" id="wisata" name="wisata">
-                                @foreach ($harga as $dt)
-                                   <option value="{{ $dt->id }}">{{ $dt->wisata->nama }}</option>
-                                @endforeach
-                             </select>
-                             <!-- error message untuk title -->
-                            @error('wisata')
-                            <div class="alert alert-danger mt-2">
-                                {{ $message }}
-                            </div>
-                    @enderror
-                        </div>
-                      </div>
-                    </div>
-
-                <div class="form-group">
-                    <div class="row mb-3 ms-4">
-                        <label for="tglkunjungan" class="col-sm-4 col-form-label">Kunjungan</label>
-                        <div class="col-sm-6">
-                            <input type="date" class="form-control @error('tglkunjungan') is-invalid @enderror" name="tglkunjungan">
-                             <!-- error message untuk title -->
-                            @error('tglkunjungan')
-                            <div class="alert alert-danger mt-2">
-                                {{ $message }}
-                            </div>
-                    @enderror
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="row mb-3 ms-4">
-                            <label for="dewasa" class="col-sm-4 col-form-label">Dewasa</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control @error('dewasa') is-invalid @enderror" name="dewasa">
-                                 <!-- error message untuk title -->
-                                @error('dewasa')
-                                <div class="alert alert-danger mt-2">
-                                    {{ $message }}
+                <div class="card-body">
+                    <form action="{{ route('reservasi.store') }}" method="POST" enctype="multipart/form-data" id="my-form">
+                        @csrf
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="nama" class="col-sm-4 col-form-label">Nama Lengkap</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control @error('nama') is-invalid @enderror"
+                                        name="nama" required placeholder="Masukan Nama Lengkap Pengunjung">
+                                    <!-- error message untuk title -->
+                                    @error('nama')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                        @enderror
                             </div>
-                          </div>
                         </div>
                         <div class="form-group">
                             <div class="row mb-3 ms-4">
-                                <label for="anak" class="col-sm-4 col-form-label">anak</label>
+                                <label for="nik" class="col-sm-4 col-form-label">Nomer Identitas</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control @error('anak') is-invalid @enderror" name="anak">
-                                     <!-- error message untuk title -->
-                                    @error('anak')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                            @enderror
+                                    <input type="number" class="form-control @error('nik') is-invalid @enderror"
+                                        name="nik" onKeyPress="if(this.value.length==16) return false;" required
+                                        placeholder="Masukan Nomer Indentitas Pengunjung">
+                                    <!-- error message untuk title -->
+                                    @error('nik')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                              </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row mb-3 ms-4">
-                                    <label for="harga" class="col-sm-4 col-form-label">harga</label>
-                                    <div class="col-sm-6">
-                                        <p value="harga">Rp.000.000</p>
-                                        {{-- <select  class="form-select" id="harga" name="harga">
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="nohp" class="col-sm-4 col-form-label">Nomer Handphone</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control @error('nohp') is-invalid @enderror"
+                                        name="nohp" onKeyPress="if(this.value.length==12) return false;"
+                                        placeholder="Masukan Nomer Handphone Pengunjung">
+                                    <!-- error message untuk title -->
+                                    @error('nohp')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="wisata" class="col-sm-4 col-form-label">Tempat Wisata</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="wisata" name="wisata">
+                                        @foreach ($harga as $dt)
+                                            <option data-harga="{{ $dt->harga }}" value="{{ $dt->id }}">
+                                                {{ $dt->wisata->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    <!-- error message untuk title -->
+                                    @error('wisata')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="tglkunjungan" class="col-sm-4 col-form-label">Tanggal Kunjungan</label>
+                                <div class="col-sm-6">
+                                    <input type="date" class="form-control @error('tglkunjungan') is-invalid @enderror"
+                                        name="tglkunjungan">
+                                    <!-- error message untuk title -->
+                                    @error('tglkunjungan')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="dewasa" class="col-sm-4 col-form-label"> Pengunjung Dewasa</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control @error('dewasa') is-invalid @enderror"
+                                        name="dewasa" id="dewasa" required
+                                        placeholder="Masukan  Jumlah Pengujung Dewasa">
+                                    <!-- error message untuk title -->
+                                    @error('dewasa')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="anak" class="col-sm-4 col-form-label">Pengunjung Anak-Anak<br>
+                                    <small>Usia di bawah 12 Tahun</small>
+                                </label>
+
+                                <div class="col-sm-6 mt-2">
+                                    <input type="number" class="form-control @error('anak') is-invalid @enderror"
+                                        name="anak" id="anak" placeholder="Masukan  Jumlah Pengujung Anak">
+                                    <!-- error message untuk title -->
+                                    @error('anak')
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="harga" class="col-sm-4 col-form-label">Harga Tiket</label>
+                                <div class="col-sm-6">
+                                    Rp. <span id="harga-text">000.000</span>
+                                    <input type="hidden" name="hargaId" id="hargaId">
+                                    {{-- <select  class="form-select" id="harga" name="harga">
                                             @foreach ($harga as $dt)
                                                <option value="{{ $dt->id }}">{{ $dt->harga }}</option>
                                             @endforeach
                                          </select> --}}
-                                         <!-- error message untuk title -->
-                                        @error('harga')
+                                    <!-- error message untuk title -->
+                                    @error('harga')
                                         <div class="alert alert-danger mt-2">
                                             {{ $message }}
                                         </div>
-                                @enderror
-                                    </div>
-                                  </div>
+                                    @enderror
                                 </div>
-                            <div class="form-group">
-                                <div class="row mb-3 ms-4">
-                                    <label for="totbay" class="col-sm-4 col-form-label">totbay</label>
-                                    <div class="col-sm-6">
-                                        <p value="totbay">Rp.000.000</p>
-                                        <input type="hidden" class="form-control @error('totbay') is-invalid @enderror" name="totbay">
-                                         <!-- error message untuk title -->
-                                        @error('totbay')
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row mb-3 ms-4">
+                                <label for="totbay" class="col-sm-4 col-form-label">Total Bayar</label>
+                                <div class="col-sm-6">
+                                    Rp. <span id="totbay-text">000.000</span>
+                                    <input type="hidden" name="totbay" id="totbay" value="">
+                                    {{-- <input type="hidden" class="form-control @error('totbay') is-invalid @enderror" name="totbay"> --}}
+                                    <!-- error message untuk title -->
+                                    @error('totbay')
                                         <div class="alert alert-danger mt-2">
                                             {{ $message }}
                                         </div>
-                                @enderror
-                                    </div>
-                                  </div>
+                                    @enderror
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" style="width:15px; height:15px;">
+                            <label class="form-check-label" for="defaultCheck1">
+                             Saya dan/atau rombongan telah membaca, memahami, dan setuju berdasarkan syarat dan<br>
+                             ketentuan yang telah berlaku
+                            </label>
+                          </div>
 
-    <div class=" d-flex justify-content-center ">
-        <button type="button" name="submit" value="totbay"  onclick="jumlah()" class="btn btn-primary">Hitung Total Bayar</button>&nbsp;
-        <button type="submit" class="btn btn-primary">Pesan Tiket</button>&nbsp;
-    </div>
- </form>
+                        <div class=" d-flex justify-content-center ">
+                            <button type="button" name="submit" value="totbay" onclick="jumlah()"
+                                class="btn btn-primary col-lg-4">Hitung Total Bayar</button>&nbsp;
+                            <button type="submit" class="btn btn-primary col-lg-4 ">Pesan Tiket</button>&nbsp;
+                            {{-- <input type="reset" onclick="return confirm_reset();">&nbsp; --}}
+                            <a class="btn btn-primary col-lg-4" role="button"
+                                onclick="return confirm('Apakah anda yakin untuk membatalkan reservasi ini?')"
+                                href="{{ route('reservasi.create') }}">Cancel</a>
+                        </div>
+                    </form>
 
-    </div>
-  </div>
-</div>
-<div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @push('script')
+                <script>
+                    // Menampilkan document berdasarkan data harga yang direlasikan terhadap table wisata tanpa memilih select terlebih dahulu
+                    $(document).ready(function(e) {
+                        $('#wisata').change();
+                    })
+                    // kalau input html dg id #wisata berubah (change), maka aksi ini dilakukan
+                    $('#wisata').change(function(e) {
+                        // ambil data-harga sesuai dg option yg dipilih
+                        let harga = $('#wisata option:selected').data('harga');
+                        // tampilkan ke elm html dg id #harga-text
+                        $('#harga-text').html(harga.toLocaleString());
+                    });
+                    // Mengeksekusi function jumlah
+                    function jumlah() {
+                        // ambil nilai di dalam input total orang dewasa & anak
+                        let dewasaTotal = $('#dewasa').val();
+                        let anakTotal = $('#anak').val();
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-</body>
-</html>
+                        // ambil harga dari option yg dipilih
+                        let harga = $('#wisata option:selected').data('harga');
+                        // kalikan sesuai jumlah anak/dewasa
+                        let totalHargaDewasa = dewasaTotal * harga;
+                        let totalHargaAnak = anakTotal * (harga / 2);
+                        // totalkan
+                        let totalHargaAll = totalHargaDewasa + totalHargaAnak;
+                        // ambil harga id (untuk), lalu masukkan nilainya ke input #hargaId
+                        let hargaId = $('#wisata').val();
+                        $('input#hargaId').val(hargaId);
+                        // masukkan totalHargaAll ke input #tobay
+                        $('input#totbay').val(totalHargaAll);
+                        // tampilkan totbay
+                        $('#totbay-text').html(totalHargaAll.toLocaleString());
+                    }
+                </script>
+                {{-- Batalkan Reservasi tanpa refresh --}}
+                {{-- <script>
+                function  confirm_reset() {
+                if(!confirm("Are You Sure to delete this"))
+                window.location.href = "{{ route('reservasi.create')}}";
+                }
+                </script> --}}
+            @endpush

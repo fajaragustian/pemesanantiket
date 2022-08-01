@@ -6,6 +6,7 @@ use App\Models\DaftarHarga;
 use App\Models\Reservasi;
 use App\Models\Wisata;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservasiController extends Controller
 {
@@ -17,6 +18,10 @@ class ReservasiController extends Controller
     public function index()
     {
         //
+        $wisata = Wisata::all();
+        $harga = DaftarHarga::all();
+        $data = Reservasi::latest()->paginate(10);
+        return view('reservasi', compact('data','wisata','harga'));
     }
 
     /**
@@ -27,9 +32,10 @@ class ReservasiController extends Controller
     public function create()
     {
         //
+
         $wisata = Wisata::all();
         $harga = DaftarHarga::all();
-        return view('reservasiCreate',compact('harga','wisata'));
+        return view('reservasiCreate', compact('harga','wisata'));
     }
 
     /**
@@ -49,7 +55,7 @@ class ReservasiController extends Controller
             'tglkunjungan'   => 'required',
             'dewasa'   => 'required',
             'anak'   => 'required',
-            'harga'   => 'required',
+            'hargaId'   => 'required',
             'totbay'   => 'required',
         ]);
         $data = Reservasi::create([
@@ -60,14 +66,14 @@ class ReservasiController extends Controller
             'tglkunjungan'     => $request->tglkunjungan,
             'dewasa'     => $request->dewasa,
             'anak'     => $request->anak,
-            'daftar_harga_id'   => $request->harga,
+            'daftar_harga_id'   => $request->hargaId,
             'totbay'     => $request->totbay,
         ]);
 
-        if($data){
+        if ($data) {
             //redirect dengan pesan sukses
             return redirect()->route('reservasi.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else{
+        } else {
             //redirect dengan pesan error
             return redirect()->route('reservasi.index')->with(['error' => 'Data Gagal Disimpan!']);
         }
@@ -82,6 +88,8 @@ class ReservasiController extends Controller
     public function show($id)
     {
         //
+        $data = Reservasi::findOrFail($id);
+        return view('reservasiShow',compact('data'));
     }
 
     /**

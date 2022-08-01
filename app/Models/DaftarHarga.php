@@ -17,6 +17,6 @@ class DaftarHarga extends Model
         return $this->belongsTo(Wisata::class);
     }
     public function reservasi(){
-        return $this->belongsToMany(Reservasi::class);
+        return $this->belongsTo(Reservasi::class);
     }
 }

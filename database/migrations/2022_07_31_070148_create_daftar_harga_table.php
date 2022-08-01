@@ -18,7 +18,7 @@ class CreateDaftarHargaTable extends Migration
             $table->unsignedBigInteger('wisata_id');
             $table->string('harga');
             $table->timestamps();
-            $table->foreign('wisata_id')->references('id')->on('wisata');
+            $table->foreign('wisata_id')->references('id')->on('wisata')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

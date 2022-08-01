@@ -16,7 +16,7 @@ class DaftarHargaController extends Controller
     public function index()
     {
         //
-        $data = DaftarHarga::all();
+        $data = DaftarHarga::latest()->paginate(2);
         $wisata = Wisata::all();
         return view('daftarharga',compact('data','wisata'));
     }
@@ -69,6 +69,8 @@ class DaftarHargaController extends Controller
     public function show($id)
     {
         //
+        $data = DaftarHarga::findOrFail($id);
+        return view('daftarhargaShow',compact('data'));
     }
 
     /**
@@ -103,5 +105,19 @@ class DaftarHargaController extends Controller
     public function destroy($id)
     {
         //
+        $data = Wisata::findOrFail($id);
+        $data->delete();
+
+        if ($data) {
+            //redirect dengan pesan sukses
+            return redirect()
+                ->route('daftarharga.index')
+                ->with(['success' => 'Data Berhasil Dihapus!']);
+        } else {
+            //redirect dengan pesan error
+            return redirect()
+                ->route('daftarharga.index')
+                ->with(['error' => 'Data Gagal Dihapus!']);
+        }
     }
 }

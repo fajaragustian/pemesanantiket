@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wisata;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WisataController extends Controller
 {
@@ -15,8 +16,8 @@ class WisataController extends Controller
     public function index()
     {
         //
-        $wisata = Wisata::all();
-        return view('wisata',compact('wisata'));
+        $wisata = Wisata::latest()->paginate(2);
+        return view('wisata', compact('wisata'));
     }
 
     /**
@@ -40,9 +41,9 @@ class WisataController extends Controller
     {
         //
         $this->validate($request, [
-            'image'     => 'required|image|mimes:png,jpg,jpeg',
-            'nama'     => 'required',
-            'link'   => 'required'
+            'image' => 'required|image|mimes:png,jpg,jpeg',
+            'nama' => 'required',
+            'link' => 'required',
         ]);
 
         //upload image
@@ -50,17 +51,21 @@ class WisataController extends Controller
         $image->storeAs('public/wisata', $image->hashName());
 
         $wisata = Wisata::create([
-            'image'     => $image->hashName(),
-            'nama'     => $request->nama,
-            'link'   => $request->link
+            'image' => $image->hashName(),
+            'nama' => $request->nama,
+            'link' => $request->link,
         ]);
 
-        if($wisata){
+        if ($wisata) {
             //redirect dengan pesan sukses
-            return redirect()->route('wisata.index')->with(['success' => 'Data Berhasil Disimpan!']);
-        }else{
+            return redirect()
+                ->route('wisata.index')
+                ->with(['success' => 'Data Berhasil Disimpan!']);
+        } else {
             //redirect dengan pesan error
-            return redirect()->route('wisata.index')->with(['error' => 'Data Gagal Disimpan!']);
+            return redirect()
+                ->route('wisata.index')
+                ->with(['error' => 'Data Gagal Disimpan!']);
         }
     }
 
@@ -73,6 +78,8 @@ class WisataController extends Controller
     public function show($id)
     {
         //
+        $data = Wisata::findOrFail($id);
+        return view('wisataShow', compact('data'));
     }
 
     /**
@@ -93,9 +100,48 @@ class WisataController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $wisata)
     {
         //
+        $this->validate($request, [
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        //get data Blog by ID
+        $wisata = Wisata::findOrFail($wisata);
+
+        if ($request->file('image') == '') {
+            $wisata->update([
+                'title' => $request->title,
+                'content' => $request->content,
+            ]);
+        } else {
+            //hapus old image
+            Storage::disk('local')->delete('public/wisata/' . $wisata->image);
+
+            //upload new image
+            $image = $request->file('image');
+            $image->storeAs('public/wisata', $image->hashName());
+
+            $wisata->update([
+                'image' => $image->hashName(),
+                'title' => $request->title,
+                'content' => $request->content,
+            ]);
+        }
+
+        if ($wisata) {
+            //redirect dengan pesan sukses
+            return redirect()
+                ->route('wisata.index')
+                ->with(['success' => 'Data Berhasil Diupdate!']);
+        } else {
+            //redirect dengan pesan error
+            return redirect()
+                ->route('wisata.index')
+                ->with(['error' => 'Data Gagal Diupdate!']);
+        }
     }
 
     /**
@@ -107,5 +153,20 @@ class WisataController extends Controller
     public function destroy($id)
     {
         //
+        $wisata = Wisata::findOrFail($id);
+        Storage::disk('local')->delete('public/wisata/' . $wisata->image);
+        $wisata->delete();
+
+        if ($wisata) {
+            //redirect dengan pesan sukses
+            return redirect()
+                ->route('wisata.index')
+                ->with(['success' => 'Data Berhasil Dihapus!']);
+        } else {
+            //redirect dengan pesan error
+            return redirect()
+                ->route('wisata.index')
+                ->with(['error' => 'Data Gagal Dihapus!']);
+        }
     }
 }

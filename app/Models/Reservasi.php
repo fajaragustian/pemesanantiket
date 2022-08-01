@@ -23,7 +23,7 @@ class Reservasi extends Model
     public function wisata(){
         return $this->belongsTo(Wisata::class);
     }
-    public function daftarharga(){
+    public function daftar(){
         return $this->belongsTo(Reservasi::class);
     }
 }

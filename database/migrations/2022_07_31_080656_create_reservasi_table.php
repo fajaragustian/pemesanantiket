@@ -25,8 +25,8 @@ class CreateReservasiTable extends Migration
             $table->unsignedBigInteger('daftar_harga_id');
             $table->string('totbay');
             $table->timestamps();
-            $table->foreign('daftar_harga_id')->references('id')->on('daftar_harga');
-            $table->foreign('wisata_id')->references('id')->on('wisata');
+            $table->foreign('daftar_harga_id')->references('id')->on('daftar_harga')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('wisata_id')->references('id')->on('wisata')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
